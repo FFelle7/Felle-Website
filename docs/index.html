@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		
+		<link href="./_app/immutable/assets/2.B7rUQKrQ.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/3.AXPyzUfC.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.DukQOrgi.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/Cctx-HGr.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/B2QSKqcC.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/oUD7saTc.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.Qv6CAmlY.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/C1FmrZbK.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/CthAm4rB.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.BBNr1vTb.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.C3gPGMQH.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/3.zx0CKE99.js">
+	</head>
+	<body data-sveltekit-preload-data="hover" data-theme="wintry">
+		<div style="display: contents">  <nav class="navbar svelte-gxt5ga"><div class="logo svelte-gxt5ga" data-svelte-h="svelte-8h3s6"> <span>Bertils</span></div> <ul class="svelte-gxt5ga"><li class="svelte-gxt5ga"><a href="#landing" class="svelte-gxt5ga" data-svelte-h="svelte-1tcn65s">Home</a></li> <li class="svelte-gxt5ga"><a href="#login" class="svelte-gxt5ga" data-svelte-h="svelte-u64pgg">Login</a></li> <li class="svelte-gxt5ga"><a href="#wordle" class="svelte-gxt5ga" data-svelte-h="svelte-1l4ef70">Wordle</a></li></ul>  <button class="theme-toggle svelte-gxt5ga"><span class="sr-only" data-svelte-h="svelte-19t1y0o">Toggle Dark Mode</span> 🌙</button></nav> <main class="bg-gradient text-white font-inter svelte-gxt5ga"> <section id="landing" class="hero svelte-3d270u"><div class="overlay svelte-3d270u"></div> <div class="content svelte-3d270u"><h1 class="title-effect svelte-3d270u" data-svelte-h="svelte-doakss">Temporary, title</h1> <p class="shimmer typing-description svelte-3d270u"></p> <button class="cta-btn svelte-3d270u" data-target="#login" data-svelte-h="svelte-uk4m91">Get Started</button> <button class="svelte-3d270u" data-svelte-h="svelte-1nk90d6">Log out</button></div></section>  <section id="login" class="login-section svelte-3d270u"><canvas id="particleCanvas" class="svelte-3d270u"></canvas> <div class="login-container svelte-3d270u"><div class="form-wrapper svelte-3d270u"><div class="form-container animate__animated animate__zoomInDown svelte-3d270u"><form class="login-form svelte-3d270u"><h2 class="svelte-3d270u" data-svelte-h="svelte-1let0gg">Sign in to Bertils</h2> <input type="text" placeholder="Username" required class="svelte-3d270u" value=""> <input type="password" placeholder="Password" required class="svelte-3d270u" value=""> <button type="submit" class="svelte-3d270u" data-svelte-h="svelte-13remx3">Sign in</button>  <div class="or-separator svelte-3d270u" data-svelte-h="svelte-1fgufw5"><span class="svelte-3d270u">OR</span></div>  <div class="social-login svelte-3d270u" data-svelte-h="svelte-1rd8ctz"><button class="google-login svelte-3d270u" style="border-radius: 16px;"><img src="https://img.icons8.com/m_rounded/512/FFFFFF/google-logo.png" alt="Google Icon" class="icon svelte-3d270u" style="height: 1.3em; margin-right: 8px; border-radius: 16px;">
+						Continue with Google</button> <button class="microsoft-login svelte-3d270u" style="border-radius: 16px;"><img src="https://img.icons8.com/ios11/600/FFFFFF/windows-10.png" alt="Microsoft Icon" class="icon svelte-3d270u" style="height: 1.3em; margin-right: 8px; border-radius: 16px;">
+						Continue with Microsoft</button></div> <p class="svelte-3d270u">Don&#39;t have an account? <a style="font-weight: bold;" class="svelte-3d270u" data-svelte-h="svelte-15czsbi">Sign Up</a></p></form></div></div></div></section>  <section id="wordle" class="wordle-section svelte-3d270u" data-svelte-h="svelte-1vidjmh"><h2 class="svelte-3d270u">Wordle Game</h2> <div class="wordle-grid svelte-3d270u"><input type="text" maxlength="5" class="wordle-input svelte-3d270u"> <button class="svelte-3d270u">Submit</button></div></section> 
+
+
+stuff to add:
+password visibility toggle
+Auto-focus on the first input field
+User menu (see name, logout and more) top right
+User menu dropdown </main> 
+			
+			<script>
+				{
+					__sveltekit_1o5cwvz = {
+						base: new URL(".", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("./_app/immutable/entry/start.DukQOrgi.js"),
+						import("./_app/immutable/entry/app.Qv6CAmlY.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 3],
+							data: [null,null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>

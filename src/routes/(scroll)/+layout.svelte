@@ -24,7 +24,6 @@
   
   <nav class="navbar">
 	<div class="logo">
-	  <!-- Placeholder logo, you can replace it with an actual image or text -->
 	  <span>Bertils</span>
 	</div>
 	<ul>

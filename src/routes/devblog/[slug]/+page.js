@@ -12,7 +12,7 @@ export async function load({ params }) {
 
   // Check if the post import function exists
   if (!postImport) {
-    throw new Error("Post not found: "+params.slug});
+    throw new Error("Post not found: "+params.slug);
   }
   // Import the specific post 
   const post = await postImport();
@@ -24,3 +24,4 @@ export async function load({ params }) {
     title,
     date,
   };
+}

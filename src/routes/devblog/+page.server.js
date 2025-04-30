@@ -11,3 +11,4 @@ export async function load() {
 	posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 	return { posts };
 }
+const prerender = true;

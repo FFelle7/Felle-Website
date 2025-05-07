@@ -157,16 +157,158 @@ function handleLogout() {
 		}
 	}
 
+
+	//Wordle
+let targetWord = '';
+let currentGuess = '';
+let guesses = Array(6).fill(null); // six rows, initially empty
+let currentRow = 0;
+let gameOver = false;
+
+const wordList = ["apple", "grape", "mango", "peach", "lemon", "melon", "berry", "plumb", "charm", "slick"];
+
+function getRandomWords() {
+  return wordList[Math.floor(Math.random() * wordList.length)];
+}
+
+onMount(() => {
+  startNewGame();
+  targetWord = getRandomWord(5);
+  console.log(targetWord)
+	console.log('Solution:', targetWord);
+});
+
+function handleWordleInput(e) {
+  const val = e.target.value.toLowerCase();
+  if (/^[a-z]{0,5}$/.test(val)) {
+    currentGuess = val;
+  }
+}
+
+async function submitGuess() {
+  if (gameOver || currentGuess.length !== 5) return;
+
+  const valid = await isValidWord(currentGuess);
+  if (!valid) {
+    alert('Not a real word');
+    return;
+  }
+
+  const result = currentGuess.split('').map((char, i) => {
+    if (char === targetWord[i]) return { letter: char, color: 'green' };
+    if (targetWord.includes(char)) return { letter: char, color: 'yellow' };
+    return { letter: char, color: 'gray' };
+  });
+
+  guesses[currentRow] = result;
+  currentRow++;
+
+  if (currentGuess === targetWord || currentRow >= 6) {
+    gameOver = true;
+  }
+
+  currentGuess = '';
+}
+
+export async function isValidWord(word) {
+  if (!word || word.length !== 5) return false;
+
+  try {
+    const res = await fetch(`https://api.datamuse.com/words?sp=${word}&max=1`);
+    const data = await res.json();
+
+    return data.length > 0 && data[0].word.toLowerCase() === word.toLowerCase();
+  } catch (err) {
+    console.error('Word check failed:', err);
+    return false;
+  }
+}
+
+
+function startNewGame() {
+  targetWord = getRandomWord();
+  guesses = Array(6).fill(null);
+  currentGuess = '';
+  currentRow = 0;
+  gameOver = false; 
+  usedKeys = {}
+}
+
+export async function getRandomWord(length = 5) {
+	try {
+		const res = await fetch(`https://api.datamuse.com/words?sp=${'?'.repeat(length)}&max=1000`);
+		const words = await res.json();
+
+		const cleanWords = words
+			.map(w => w.word)
+			.filter(w => /^[a-z]+$/.test(w)); // remove proper nouns, numbers, etc.
+
+		const randomWord = cleanWords[Math.floor(Math.random() * cleanWords.length)];
+		console.log(randomWord)
+		targetWord = randomWord;
+		return randomWord?.toLowerCase() || null;
+	} catch (err) {
+		console.error('Error fetching word:', err);
+		return null;
+	}
+}
+
+
+const keys = [
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+  ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Backspace']
+];
+
+let usedKeys = {};
+
+function handleKeyPress(key) {
+  if (gameOver) return;
+
+  if (key === 'Enter') {
+    submitGuess();
+    return;
+  }
+
+  if (key === 'Backspace') {
+    currentGuess = currentGuess.slice(0, -1);
+    return;
+  }
+
+  if (currentGuess.length < 5 && /^[A-Z]$/.test(key)) {
+    currentGuess += key.toLowerCase();
+  }
+}
+
+function updateUsedKeys() {
+  const latest = guesses[currentRow - 1];
+  if (!latest) return;
+
+  for (const { letter, color } of latest) {
+    const l = letter.toUpperCase();
+    if (color === 'green') {
+      usedKeys[l] = 'green';
+    } else if (color === 'yellow' && usedKeys[l] !== 'green') {
+      usedKeys[l] = 'yellow';
+    } else if (!usedKeys[l]) {
+      usedKeys[l] = 'gray';
+    }
+  }
+}
+
+$: if (currentRow > 0) updateUsedKeys();
+
+
 </script>
 
 <!-- HERO SECTION -->
 <section id="landing" class="hero">
 	<div class="overlay"></div>
 	<div class="content">
-		<h1 class="title-effect">Temporary, title</h1>
+		<h1 class="title-effect">Bertils, Hemsida</h1>
 		<p class="shimmer typing-description">{descriptionDisplay}</p>
 		<button class="cta-btn" data-target="#login" on:click={scrollIntoView}>
-			Get Started
+			Learn More
 		</button>
 		<button on:click={handleLogout}>Log out</button>
 		
@@ -222,13 +364,62 @@ function handleLogout() {
   </section>
 
 
+  
+
 <!-- WORDLE GAME -->
 <section id="wordle" class="wordle-section">
-	<h2>Wordle Game</h2>
 	<div class="wordle-grid">
-		<input type="text" maxlength="5" class="wordle-input" />
-		<button>Submit</button>
-	</div>
+		{#each guesses as guess, i}
+			<div class="wordle-row">
+				{#if guess}
+					{#each guess as g}
+						<div class="wordle-tile {g.color}">{g.letter.toUpperCase()}</div>
+					{/each}
+				{:else}
+					{#each Array(5) as _, j}
+						<div class="wordle-tile">
+							{#if i === currentRow && j < currentGuess.length}
+								{currentGuess[j].toUpperCase()}
+							{/if}
+						</div>
+					{/each}
+				{/if}
+			</div>
+		{/each}
+	
+		{#if !gameOver}
+			<input
+				class="wordle-input"
+				maxlength="5"
+				bind:value={currentGuess}
+				on:input={handleWordleInput}
+				on:keydown={(e) => e.key === 'Enter' && submitGuess()}
+				placeholder="Enter 5-letter word"
+			/>
+			<button on:click={submitGuess}>Submit</button>
+		{:else}
+			<p class="game-over">
+				{guesses[currentRow - 1]?.map(g => g.letter).join('') === targetWord ? 'You win!' : `Game Over! Word was: ${targetWord.toUpperCase()}`}
+			</p>
+			<button on:click={startNewGame}>Restart</button>
+		{/if}
+	</div>	
+	
+	<div class="keyboard">
+		{#each keys as row}
+		  <div class="keyboard-row">
+			{#each row as key}
+			  <button
+				class="key {usedKeys[key] || ''}"
+				on:click={() => handleKeyPress(key)}
+			  >
+				{key}
+			  </button>
+			{/each}
+		  </div>
+		{/each}
+	  </div>
+	  
 </section>
 
 <style>
@@ -390,52 +581,6 @@ function handleLogout() {
 	animation: glowPulse 3s infinite alternate;
 	}
 
-	/* WORDLE GAME */
-	.wordle-section {
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));
-		color: white;
-	}
-
-	.wordle-grid {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	.wordle-input {
-		width: 200px;
-		height: 40px;
-		text-align: center;
-		font-size: 1.5rem;
-		margin: 10px;
-		background: rgba(255, 255, 255, 0.1);
-		border: none;
-		color: white;
-		border-radius: 5px;
-	}
-
-	.wordle-section button {
-		padding: 10px;
-		background: #ff4500;
-		color: white;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		margin-top: 15px;
-		font-weight: bold;
-		transition: 0.3s;
-	}
-
-	.wordle-section button:hover {
-		background: #d13800;
-		transform: scale(1.05);
-	}
 
 	/* LOGIN SECTION BACKGROUND */
 	.login-section {
@@ -501,6 +646,148 @@ function handleLogout() {
 	a {
 		cursor: pointer;
 	}
+
+	
+	/* WORDLE GAME */
+	.wordle-section {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));
+		color: white;
+	}
+
+	.wordle-grid {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.wordle-input {
+		width: 200px;
+		height: 40px;
+		text-align: center;
+		font-size: 1.5rem;
+		margin: 10px;
+		background: rgba(255, 255, 255, 0.1);
+		border: none;
+		color: white;
+		border-radius: 5px;
+	}
+
+	.wordle-section button {
+		padding: 10px;
+		background: #201d3b;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		margin-top: 15px;
+		font-weight: bold;
+		transition: 0.3s;
+	}
+
+	.wordle-section button:hover {
+		background: #d13800;
+		transform: scale(1.05);
+	}
+
+	.wordle-row {
+	display: flex;
+	margin-bottom: 5px;
+}
+
+.wordle-tile {
+	width: 40px;
+	height: 40px;
+	margin: 2px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 1.2rem;
+	border-radius: 4px;
+	text-transform: uppercase;
+	background-color: #333;
+	color: white;
+}
+
+.wordle-tile.green {
+	background-color: #6aaa64;
+}
+
+.wordle-tile.yellow {
+	background-color: #c9b458;
+}
+
+.wordle-tile.gray {
+	background-color: #787c7e;
+}
+
+.wordle-input {
+	margin-top: 10px;
+	font-size: 1.1rem;
+	padding: 5px;
+	width: 220px;
+	text-transform: uppercase;
+}
+
+button {
+	margin-left: 10px;
+	padding: 6px 10px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.game-over {
+	margin-top: 20px;
+	font-size: 1.4rem;
+	font-weight: bold;
+	color: #ff7675;
+}
+
+.keyboard {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.keyboard-row {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.key {
+  margin: 2px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+  min-width: 40px;
+}
+
+.key.green {
+  background-color: #6aaa64;
+}
+
+.key.yellow {
+  background-color: #c9b458;
+}
+
+.key.gray {
+  background-color: #787c7e;
+}
+
+
+
 </style>
 
 

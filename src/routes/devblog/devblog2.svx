@@ -1,0 +1,28 @@
+---
+title: Version 0.1.x
+date: "2025-05-07"
+---
+# Devblog 2
+## Description
+I have now implemented the full login and registration system, including handling user credentials in localStorage. I also added a particles animation for a more engaging experience, which appears behind the login section. <br>Additionally, I created a Wordle game placeholder. The dark/light theme toggle functionality has been retained and works seamlessly. (kinda)
+
+<br> My priority going forward is polishing the Wordle game and refining the login system’s design and user interactions. With making the wordle functional and finished.
+
+## Changes
+The following changes and implementations have been made in this version of the project:
+
+* Complete login and registration system (using localStorage)
+
+* Smooth scroll functionality for navigation links
+
+* Particle animation added to the login screen
+
+* Wordle game placeholder added
+
+* Transition animations for login/register forms
+
+* Dark Mode/Light Mode toggle remains functional
+
+* Social login buttons for Google and Microsoft integration (buttons styled but non-functional)
+
+<hr> <br>

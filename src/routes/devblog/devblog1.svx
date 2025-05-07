@@ -1,0 +1,23 @@
+
+---
+title: Version 0.0.x
+date: "2025-05-07"
+---
+# Devblog 1
+## Description
+Hittils har jag skapat en landing page och en navbar med en scrolleffect. Även gjort grunderna till ett inloggningssystem, utan backend. Och lagt till light och dark mode.
+<br> Min prio är att göra klart inloggningssystemet och fixa styling till den. Kanske även animationer.
+
+## Changes
+The following changes and implementations have been made in that version of the project:
+
+* Darkmode / Lightmode
+
+* Landing page
+
+* Navbar
+
+* Halvfungerande loginsystem (utan backend)
+
+<hr>
+<br>

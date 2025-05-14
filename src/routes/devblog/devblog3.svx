@@ -1,0 +1,30 @@
+---
+title: Version 0.2.x
+date: "2025-05-14"
+---
+# Devblog 3
+## Description
+Nu är wordle systemet fungerande, använder en api som söker på google för att hitta varenda ord med 5 bokstäver. Den kollar om ordet är ett ord och om ordet är det korrekta ordet. 
+Jag har ett tangentbord som fungerar som är en ui och där kan man även se de bokstäver som är använda, korrekta, fel eller rätt men på fel plats. Det finns ett input fält som jag
+kanske ska byta ut mot att man skriver på de bokstavsplatser som finns.
+
+<br> Nästa prio är att göra lite små "adjustments" för att få en mer användarvänlig websida.
+
+## Changes
+The following changes and implementations have been made in this version of the project:
+
+* Nu funkar wordle, det går att spela
+
+* En api, som kollar orden
+
+* En "fin" wordle ui
+
+* Wordle tangentbord (fungerar)
+
+* Man ser om en bokstav är fel, korrekt eller korrekt men på fel plats
+
+* Man får ett meddelande om man har ett ord som inte är ett ord.
+
+* Det är dock på en jävligt svår nivå (oftast)
+
+<hr> <br>

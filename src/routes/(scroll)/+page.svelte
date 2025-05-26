@@ -34,8 +34,8 @@
 	}
   
 	let isLogin = true;
-	let isLoggedIn = false;
-
+	let isLoggedIn = false; 
+	/*	let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';*/
 	let animationClass = "animate__zoomInDown"; // Start animation
   
 	// Transition between login and register
@@ -110,52 +110,67 @@
 	  animateParticles();
 	});
 
-	function handleLogin() {
+function handleLogin() {
   const storedUser = localStorage.getItem('user');
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    if (user.username === loginUsername && user.password === loginPassword) {
-		const isLoggedIn = localStorage.getItem('isLoggedIn');
-	if (isLoggedIn === 'true') {
-		alert('You are already logged in!');
-	} else {alert("Login successful!");}
-      localStorage.setItem('isLoggedIn', 'true');
+
+  if (!storedUser) {
+    alert("No registered user found.");
+    return;
+  }
+
+  const user = JSON.parse(storedUser);
+
+  if (user.username === loginUsername && user.password === loginPassword) {
+    if (isLoggedIn) {
+      alert("You're already logged in.");
     } else {
-      alert("Invalid credentials!");
+      isLoggedIn = true;
+      localStorage.setItem('isLoggedIn', 'true');
+      alert("Login successful!");
     }
   } else {
-    alert("No registered user found.");
+    alert("Invalid credentials.");
   }
 }
 
+
 function handleRegister() {
+  const existing = localStorage.getItem('user');
+  if (existing) {
+    const existingUser = JSON.parse(existing);
+    if (existingUser.username === registerUsername) {
+      alert("Username already taken.");
+      return;
+    }
+  }
 
   if (registerPassword !== registerConfirmPassword) {
     alert("Passwords do not match!");
     return;
   }
-  
+
   const newUser = {
     username: registerUsername,
     email: registerEmail,
     password: registerPassword,
   };
-  
-  // Store the user data in localStorage
+
   localStorage.setItem('user', JSON.stringify(newUser));
   alert("Registration successful! You can now log in.");
-  switchToLogin(); // Switch back to login form after successful registration
+  switchToLogin();
 }
 
-function handleLogout() {
-	if (isLoggedIn === 'true') {
-		localStorage.removeItem('isLoggedIn');
-  		alert("You have logged out successfully.");}
-		else { 
-			alert("You are not logged in.")
 
-		}
-	}
+function handleLogout() {
+  if (isLoggedIn) {
+    localStorage.removeItem('isLoggedIn');
+    isLoggedIn = false;
+    alert("You have logged out successfully.");
+  } else {
+    alert("You are not logged in.");
+  }
+}
+
 
 
 	//Wordle
@@ -172,7 +187,6 @@ function getRandomWords() {
 }
 
 onMount(() => {
-  startNewGame();
   targetWord = getRandomWord(5);
   console.log(targetWord)
 	console.log('Solution:', targetWord);
@@ -232,6 +246,9 @@ function startNewGame() {
   currentRow = 0;
   gameOver = false; 
   usedKeys = {}
+  if (confirm("Restart game?")) {
+	restartGame();
+	}
 }
 
 export async function getRandomWord(length = 5) {
@@ -318,14 +335,16 @@ $: if (currentRow > 0) updateUsedKeys();
 <!-- LOGIN SECTION -->
 <section id="login" class="login-section">
 	<canvas id="particleCanvas"></canvas>
+	<div class="overlay2"></div>
 	<div class="login-container">
 	  <div class="form-wrapper">
 		<div class="form-container animate__animated {animationClass}">
 			{#if isLogin}
 			<form class="login-form" on:submit|preventDefault={handleLogin}>
 				<h2>Sign in to Bertils</h2>
-				<input type="text" placeholder="Username" required bind:value={loginUsername} />
+				<input type="text" placeholder="Username" minlength="3" maxlength="16" required bind:value={loginUsername} />
 				<input type="password" placeholder="Password" required bind:value={loginPassword} />
+				
 				<button type="submit">Sign in</button>
 				
 				<!-- OR Separator -->
@@ -349,8 +368,8 @@ $: if (currentRow > 0) updateUsedKeys();
 			{:else}
 			  <form class="login-form" on:submit|preventDefault={handleRegister}>
 				<h2>Create an Account</h2>
-				<input type="text" placeholder="Username" required bind:value={registerUsername} />
-				<input type="email" placeholder="Email" required bind:value={registerEmail} />
+				<input type="text" placeholder="Username" minlength="3" maxlength="16" required bind:value={registerUsername} />
+				<input type="email" placeholder="Email" required bind:value={registerEmail}  />
 				<input type="password" placeholder="Password" required bind:value={registerPassword} />
 				<input type="password" placeholder="Confirm Password" required bind:value={registerConfirmPassword} />
 				<button type="submit">Sign Up</button>
@@ -365,9 +384,9 @@ $: if (currentRow > 0) updateUsedKeys();
 
 
   
-
 <!-- WORDLE GAME -->
 <section id="wordle" class="wordle-section">
+	<div class="overlay3"></div>
 	<div class="wordle-grid">
 		{#each guesses as guess, i}
 			<div class="wordle-row">
@@ -444,13 +463,33 @@ $: if (currentRow > 0) updateUsedKeys();
 		position: relative;
 		overflow: hidden;
 		padding-top: 50px;
-		background: radial-gradient(circle, #202057, #04040d);
+		/*background: radial-gradient(circle, #202057, #04040d);*/
+		background-image: url("images/background1.png");
 	}
 
 	.overlay {
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(135deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 0, 0.9));
+		background: #000000;
+		background: linear-gradient(358deg, rgba(0, 0, 0, 1) 0%, rgba(80, 183, 123, 0) 42%, rgba(87, 199, 133, 0) 78%, rgba(0, 0, 0, 0) 100%);
+	}
+
+	
+	.overlay2 {
+		position: absolute;
+		top: 100vh;
+		inset: 0;
+		background: #000000;
+		background: linear-gradient(358deg, rgba(0, 0, 0, 1) 0%, rgba(80, 183, 123, 0) 37%, rgba(87, 199, 133, 0) 78%, rgba(0, 0, 0, 1) 100%);
+	}
+
+	.overlay3 {
+		position: absolute;
+		inset: 0;
+		background: #000000;
+		background:
+  			linear-gradient(336deg, rgba(0, 0, 0, 0) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 1) 100%),
+  			linear-gradient(24deg, rgba(0, 0, 0, 0) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 1) 100%);
 	}
 
 	.content {
@@ -545,7 +584,7 @@ $: if (currentRow > 0) updateUsedKeys();
   }
 
   .login-form button {
-    background: linear-gradient(135deg, #38383800, #6c6c6c88);
+    background: linear-gradient(135deg, #38383800, #a3a1a139);
 	height: 2em;
     color: white;
     cursor: pointer;
@@ -584,7 +623,9 @@ $: if (currentRow > 0) updateUsedKeys();
 
 	/* LOGIN SECTION BACKGROUND */
 	.login-section {
-		background: content-box radial-gradient(rgba(32, 32, 87, 0.351), rgb(0, 0, 0));}
+		/*background: content-box radial-gradient(rgba(32, 32, 87, 0.351), rgb(0, 0, 0));*/
+		background-image: url("images/background4.png");
+	}
 
 	.login-form {
 		transition: transform 0.1s ease-out;
@@ -650,13 +691,15 @@ $: if (currentRow > 0) updateUsedKeys();
 	
 	/* WORDLE GAME */
 	.wordle-section {
+		position: relative;
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-		background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));
+		/*background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));*/
+		background-image: url("images/background2.png");
 		color: white;
 	}
 
@@ -664,6 +707,7 @@ $: if (currentRow > 0) updateUsedKeys();
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		z-index: 4;
 	}
 
 	.wordle-input {
@@ -672,7 +716,7 @@ $: if (currentRow > 0) updateUsedKeys();
 		text-align: center;
 		font-size: 1.5rem;
 		margin: 10px;
-		background: rgba(255, 255, 255, 0.1);
+		background: rgba(0, 0, 0, 0.326);
 		border: none;
 		color: white;
 		border-radius: 5px;
@@ -680,7 +724,7 @@ $: if (currentRow > 0) updateUsedKeys();
 
 	.wordle-section button {
 		padding: 10px;
-		background: #201d3b;
+		background: #00000036;
 		color: white;
 		border: none;
 		border-radius: 5px;
@@ -711,7 +755,12 @@ $: if (currentRow > 0) updateUsedKeys();
 	font-size: 1.2rem;
 	border-radius: 4px;
 	text-transform: uppercase;
-	background-color: #333;
+	background:
+  	linear-gradient(336deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%),
+  	linear-gradient(24deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%),
+  	linear-gradient(156deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%),
+  	linear-gradient(204deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%);
+  	background-color: #00000046;
 	color: white;
 }
 
@@ -754,6 +803,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 4;
 }
 
 .keyboard-row {
@@ -786,13 +836,45 @@ button {
   background-color: #787c7e;
 }
 
+@media (max-width: 600px) {
+  .wordle-grid {
+    width: 90vw;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .login-form {
+    width: 90%;
+    padding: 20px;
+  }
+}
+
 
 
 </style>
 
 
-stuff to add:
-password visibility toggle
-Auto-focus on the first input field
-User menu (see name, logout and more) top right
-User menu dropdown
+🔐 Auth & User System
+Password visibility toggle – Easy win for UX.
+
+Form validation – Prevent garbage input (min/max length, email regex, etc).
+
+Logout feedback – After logout, redirect or update UI instantly (right now you only get an alert).
+
+
+🧠 Wordle Logic & UX
+Highlight invalid words – Flash red border or shake animation when invalid.
+
+Stats tracking – Wins, losses, streaks saved in localStorage.
+
+Animations on tile flip – Makes guessing more satisfying.
+
+
+📱 UI/Design
+Responsive layout – The Wordle grid and login boxes could break on mobile. Use media queries or flexbox/grid.
+
+Sticky header with user menu – Add a top nav that shows current user, logout, maybe a theme toggle
+
+Game end message – “You won!” / “The word was X” modal.
+
+Restart confirmation – Avoid accidental restarts with a “Are you sure?” prompt.
+

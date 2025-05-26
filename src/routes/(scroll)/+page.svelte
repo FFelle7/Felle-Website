@@ -82,7 +82,23 @@
 
 	
 	onMount(() => {
-	  const canvas = document.getElementById("particleCanvas");
+	const sections = document.querySelectorAll('.fade-in-section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      } else {
+        entry.target.classList.remove('is-visible');
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+
+  sections.forEach(section => observer.observe(section));  
+		
+	const canvas = document.getElementById("particleCanvas");
 	  const ctx = canvas.getContext("2d");
   
 	  canvas.width = window.innerWidth;
@@ -398,7 +414,7 @@ function handleScroll() {
 </script>
 
 <!-- HERO SECTION -->
-<section id="landing" class="hero">
+<section id="landing" class="hero fade-in-section">
 	<div class="overlay"></div>
 	<div class="content">
 		<h1 class="title-effect">Bertils Wordle – Spela och vinn!</h1>
@@ -410,7 +426,7 @@ function handleScroll() {
 </section>
 
 <!-- LOGIN SECTION -->
-<section id="login" class="login-section">
+<section id="login" class="login-section fade-in-section">
 	<canvas id="particleCanvas"></canvas>
 	<div class="overlay2"></div>
 	<div
@@ -467,7 +483,7 @@ function handleScroll() {
 
   
 <!-- WORDLE GAME -->
-<section id="wordle" class="wordle-section">
+<section id="wordle" class="wordle-section fade-in-section">
 	<div class="overlay3"></div>
 	<div class="wordle-grid">
 		{#each guesses as guess, i}
@@ -535,7 +551,7 @@ function handleScroll() {
 	}
 	#particleCanvas {
 		position: absolute;
-		z-index: 9999;
+		z-index: 0;
 	}
 
 	/* HERO */
@@ -973,7 +989,18 @@ button {
   will-change: transform;
 }
 
+/* Startläge: osynlig och flyttad lite ned */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
 
+/* När synlig i viewport */
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}
 </style>
 
 skaffa win/lose animations

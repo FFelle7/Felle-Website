@@ -511,7 +511,7 @@ $: if (currentRow > 0) updateUsedKeys();
 		overflow: hidden;
 		padding-top: 50px;
 		/*background: radial-gradient(circle, #202057, #04040d);*/
-		background-image: url("images/background1.png");
+		background-image: url("src/stores/images/background1.png");
 	}
 
 	@keyframes flip {
@@ -692,7 +692,7 @@ $: if (currentRow > 0) updateUsedKeys();
 	/* LOGIN SECTION BACKGROUND */
 	.login-section {
 		/*background: content-box radial-gradient(rgba(32, 32, 87, 0.351), rgb(0, 0, 0));*/
-		background-image: url("images/background4.png");
+		background-image: url("src/stores/images/background4.png");
 	}
 
 	.login-form {
@@ -767,7 +767,7 @@ $: if (currentRow > 0) updateUsedKeys();
 		justify-content: center;
 		text-align: center;
 		/*background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));*/
-		background-image: url("images/background2.png");
+		background-image: url("src/stores/images/background2.png");
 		color: white;
 	}
 

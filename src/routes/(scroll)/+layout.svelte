@@ -224,13 +224,6 @@
 		background: linear-gradient(-45deg, #212b46, #010409, black);
 	  }
 	}
-  
-	/* Dark theme adjustments */
-	.dark .navbar {
-	  background: rgba(0, 0, 20, 0.5);
-	  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-	}
-  
 	/* Intro Animation for Navbar */
 	@keyframes navbarIntro {
 	  0% {
@@ -241,11 +234,6 @@
 		opacity: 1;
 		transform: translateY(0);
 	  }
-	}
-  
-	/* Font for dark mode */
-	.dark .theme-toggle {
-	  color: #7a5aff;
 	}
   </style>
   

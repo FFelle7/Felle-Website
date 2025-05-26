@@ -3,7 +3,7 @@
 	import 'animate.css';
 	import confetti from 'canvas-confetti';
 
-	let descriptionText = "Just testing a description for the title";
+	let descriptionText = "Spela Wordle med stil – mörkt läge, animerade effekter och en unik spelupplevelse.";
 	let descriptionDisplay = "";
 	let j = 0;
 
@@ -135,7 +135,17 @@
   
 	  initParticles();
 	  animateParticles();
-	});
+
+	  handleScroll(); // initiera rätt position
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+
+});
 
 function handleLogin() {
   const storedUser = localStorage.getItem('user');
@@ -359,6 +369,31 @@ function updateUsedKeys() {
 
 $: if (currentRow > 0) updateUsedKeys();
 
+let offsetX = 0;
+  let loginBox;
+  $: transformStyle = `transform: translateX(${offsetX}px); transition: transform 0.2s ease;`;
+
+function handleScroll() {
+  if (!loginBox) return;
+
+  const windowHeight = window.innerHeight;
+  const scrollY = window.scrollY || window.pageYOffset;
+
+  const rect = loginBox.getBoundingClientRect();
+  const boxTop = rect.top + scrollY;
+  const boxMiddle = boxTop + rect.height / 2;
+
+  const viewportQuarter = scrollY + windowHeight * 0.25;
+  const viewportThreeQuarter = scrollY + windowHeight * 0.75;
+
+  if (boxMiddle < viewportQuarter) {
+    offsetX = window.innerWidth;
+  } else if (boxMiddle > viewportThreeQuarter) {
+    offsetX = -window.innerWidth;
+  } else {
+    offsetX = 0;
+  }
+}
 
 </script>
 
@@ -366,7 +401,7 @@ $: if (currentRow > 0) updateUsedKeys();
 <section id="landing" class="hero">
 	<div class="overlay"></div>
 	<div class="content">
-		<h1 class="title-effect">Bertils, Hemsida</h1>
+		<h1 class="title-effect">Bertils Wordle – Spela och vinn!</h1>
 		<p class="shimmer typing-description">{descriptionDisplay}</p>
 		<button class="cta-btn" data-target="#login" on:click={scrollIntoView}>
 			Learn More
@@ -378,7 +413,10 @@ $: if (currentRow > 0) updateUsedKeys();
 <section id="login" class="login-section">
 	<canvas id="particleCanvas"></canvas>
 	<div class="overlay2"></div>
-	<div class="login-container">
+	<div
+  class="login-container login-box"
+  bind:this={loginBox}
+  style={transformStyle}>
 	  <div class="form-wrapper">
 		<div class="form-container animate__animated {animationClass}">
 			{#if isLogin}
@@ -930,6 +968,10 @@ button {
   }
 }
 
+.login-box {
+  position: relative;
+  will-change: transform;
+}
 
 
 </style>

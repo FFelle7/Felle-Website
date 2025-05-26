@@ -3,16 +3,39 @@
 	import { onMount } from "svelte";
   
 	let isDark = true;
+	let currentUser = null;
+	let showMenu = false;
   
-	// Function to toggle dark mode
 	function toggleTheme() {
-	  isDark = !isDark;
-	  document.documentElement.classList.toggle("dark", isDark);
+		isDark = !isDark;
+		document.documentElement.classList.toggle('dark', isDark);
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
 	}
-  
+
+	function toggleMenu() {
+		showMenu = !showMenu;
+	}
+
+	function logout() {
+    	localStorage.setItem('isLoggedIn', 'false');
+		currentUser = null;
+		location.reload(); // clean reset
+	}
+
 	onMount(() => {
-	  document.documentElement.classList.add("dark");
-	});
+	const savedTheme = localStorage.getItem('theme');
+	if (savedTheme === 'light') isDark = false;
+	document.documentElement.classList.toggle('dark', isDark);
+
+	const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+	if (loggedIn) {
+		currentUser = JSON.parse(localStorage.getItem('user'));
+	} else {
+		currentUser = null;
+	}
+});
+
+
   
 	// Smooth scrolling
 	function scrollIntoView({ target }) {
@@ -40,8 +63,20 @@
 	  {:else}
 		🌞
 	  {/if}
-	  
 	</button>
+	{#if currentUser}
+  <div class="user-menu">
+	<button on:click={toggleMenu}>
+	  {currentUser.username} ⌄
+	</button>
+	{#if showMenu}
+	  <div class="dropdown">
+		<button on:click={logout}>Logout</button>
+	  </div>
+	{/if}
+  </div>
+{/if}
+
   </nav>
   
   <main class="bg-gradient text-white font-inter">
@@ -69,6 +104,44 @@
 	  opacity: 0;
 	  animation: navbarIntro 1s forwards;
 	}
+
+	.user-menu {
+  position: relative;
+}
+
+.user-menu button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #1f1f1f;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.dropdown button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.dropdown button:hover {
+  background: rgba(255,255,255,0.1);
+}
+
   
 	/* Logo Styling */
 	.navbar .logo {

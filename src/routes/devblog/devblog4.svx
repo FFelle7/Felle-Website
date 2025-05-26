@@ -1,0 +1,19 @@
+---
+title: Version 0.3.x
+date: "2025-05-26"
+---
+# Devblog 3
+## Description
+Ändrade lite bakgrunder, fixade buggar. Installerade "npm i canvas-confetti" för att få någonting då man vinner. Lade till animationer i wordle. Logga ut i navbaren.
+
+## Changes
+The following changes and implementations have been made in this version of the project:
+
+* confetti
+* Nya bakgrunder
+* Bugfixar
+* Ogiltigt ord animationer
+* Skriv ord animationer
+* Jävligt många bugfixar (finna jävligt många fler dock)
+
+<hr> <br>

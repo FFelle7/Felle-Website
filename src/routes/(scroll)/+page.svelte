@@ -1,18 +1,43 @@
 <script>
 	import { onMount } from "svelte";
 	import 'animate.css';
-	
+	import confetti from 'canvas-confetti';
+
 	let descriptionText = "Just testing a description for the title";
 	let descriptionDisplay = "";
 	let j = 0;
 
 	let loginUsername = '';
 	let loginPassword = '';
+	let showPassword = false;
 
 	let registerUsername = '';
 	let registerEmail = '';
 	let registerPassword = '';
 	let registerConfirmPassword = '';
+
+	// Confetti launcher
+  function launchConfetti() {
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      scalar: 1.2,
+    });
+  }
+
+  // Flag to prevent multiple triggers
+  let confettiLaunched = false;
+
+  // Reactive watch for winning condition + gameOver flag
+  $: if (
+    gameOver &&
+    !confettiLaunched &&
+    guesses[currentRow - 1]?.map(g => g.letter).join('').toUpperCase() === targetWord.toUpperCase()
+  ) {
+    launchConfetti();
+    confettiLaunched = true;
+  }
 
 	
 	function typeDescription() {
@@ -63,6 +88,8 @@
 	  canvas.width = window.innerWidth;
 	  canvas.height = window.innerHeight;
   
+	  isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
 	  let particlesArray = [];
 	  const numberOfParticles = 50;
   
@@ -112,6 +139,8 @@
 
 function handleLogin() {
   const storedUser = localStorage.getItem('user');
+  		location.reload(); // clean reset
+
 
   if (!storedUser) {
     alert("No registered user found.");
@@ -171,6 +200,15 @@ function handleLogout() {
   }
 }
 
+let isInvalid = false;
+
+	function triggerShake() {
+		isInvalid = true;
+		setTimeout(() => {
+			isInvalid = false;
+		}, 500);
+	}
+
 
 
 	//Wordle
@@ -180,7 +218,6 @@ let guesses = Array(6).fill(null); // six rows, initially empty
 let currentRow = 0;
 let gameOver = false;
 
-const wordList = ["apple", "grape", "mango", "peach", "lemon", "melon", "berry", "plumb", "charm", "slick"];
 
 function getRandomWords() {
   return wordList[Math.floor(Math.random() * wordList.length)];
@@ -204,15 +241,21 @@ async function submitGuess() {
 
   const valid = await isValidWord(currentGuess);
   if (!valid) {
-    alert('Not a real word');
+    /*alert('Not a real word');*/
+	triggerShake();
     return;
   }
 
   const result = currentGuess.split('').map((char, i) => {
-    if (char === targetWord[i]) return { letter: char, color: 'green' };
-    if (targetWord.includes(char)) return { letter: char, color: 'yellow' };
-    return { letter: char, color: 'gray' };
-  });
+  let color = 'gray';
+  if (char === targetWord[i]) {
+    color = 'green';
+  } else if (targetWord.includes(char)) {
+    color = 'yellow';
+  }
+
+  return { letter: char, color, flip: true };
+});
 
   guesses[currentRow] = result;
   currentRow++;
@@ -245,6 +288,7 @@ function startNewGame() {
   currentGuess = '';
   currentRow = 0;
   gameOver = false; 
+  confettiLaunched = false;
   usedKeys = {}
   if (confirm("Restart game?")) {
 	restartGame();
@@ -326,9 +370,7 @@ $: if (currentRow > 0) updateUsedKeys();
 		<p class="shimmer typing-description">{descriptionDisplay}</p>
 		<button class="cta-btn" data-target="#login" on:click={scrollIntoView}>
 			Learn More
-		</button>
-		<button on:click={handleLogout}>Log out</button>
-		
+		</button>		
 	</div>
 </section>
 
@@ -344,6 +386,8 @@ $: if (currentRow > 0) updateUsedKeys();
 				<h2>Sign in to Bertils</h2>
 				<input type="text" placeholder="Username" minlength="3" maxlength="16" required bind:value={loginUsername} />
 				<input type="password" placeholder="Password" required bind:value={loginPassword} />
+				
+				
 				
 				<button type="submit">Sign in</button>
 				
@@ -389,10 +433,10 @@ $: if (currentRow > 0) updateUsedKeys();
 	<div class="overlay3"></div>
 	<div class="wordle-grid">
 		{#each guesses as guess, i}
-			<div class="wordle-row">
+			<div class="wordle-row {isInvalid ? 'shake' : ''}">
 				{#if guess}
 					{#each guess as g}
-						<div class="wordle-tile {g.color}">{g.letter.toUpperCase()}</div>
+						<div class="wordle-tile {g.color} {g.flip ? 'flip' : ''}">{g.letter.toUpperCase()}</div>
 					{/each}
 				{:else}
 					{#each Array(5) as _, j}
@@ -418,8 +462,10 @@ $: if (currentRow > 0) updateUsedKeys();
 			<button on:click={submitGuess}>Submit</button>
 		{:else}
 			<p class="game-over">
-				{guesses[currentRow - 1]?.map(g => g.letter).join('') === targetWord ? 'You win!' : `Game Over! Word was: ${targetWord.toUpperCase()}`}
-			</p>
+  {guesses[currentRow - 1]?.map(g => g.letter).join('').toUpperCase() === targetWord.toUpperCase()
+    ? 'You win!'
+    : `Game Over! Word was: ${targetWord.toUpperCase()}`}
+</p>
 			<button on:click={startNewGame}>Restart</button>
 		{/if}
 	</div>	
@@ -451,6 +497,7 @@ $: if (currentRow > 0) updateUsedKeys();
 	}
 	#particleCanvas {
 		position: absolute;
+		z-index: 9999;
 	}
 
 	/* HERO */
@@ -466,6 +513,27 @@ $: if (currentRow > 0) updateUsedKeys();
 		/*background: radial-gradient(circle, #202057, #04040d);*/
 		background-image: url("images/background1.png");
 	}
+
+	@keyframes flip {
+  0% {
+    transform: rotateX(0);
+  }
+  50% {
+    transform: rotateX(90deg);
+    background-color: #333;
+    color: transparent;
+  }
+  100% {
+    transform: rotateX(0);
+    color: white;
+  }
+}
+
+.wordle-tile.flip {
+  animation: flip 0.6s ease-in-out;
+  transform-style: preserve-3d;
+}
+
 
 	.overlay {
 		position: absolute;
@@ -744,6 +812,20 @@ $: if (currentRow > 0) updateUsedKeys();
 	margin-bottom: 5px;
 }
 
+.shake {
+	animation: shake 0.4s ease;
+	background-color: rgba(255, 0, 0, 0.1);
+}
+
+@keyframes shake {
+	0% { transform: translateX(0); }
+	20% { transform: translateX(-5px); }
+	40% { transform: translateX(5px); }
+	60% { transform: translateX(-5px); }
+	80% { transform: translateX(5px); }
+	100% { transform: translateX(0); }
+}
+
 .wordle-tile {
 	width: 40px;
 	height: 40px;
@@ -852,29 +934,5 @@ button {
 
 </style>
 
-
-🔐 Auth & User System
-Password visibility toggle – Easy win for UX.
-
-Form validation – Prevent garbage input (min/max length, email regex, etc).
-
-Logout feedback – After logout, redirect or update UI instantly (right now you only get an alert).
-
-
-🧠 Wordle Logic & UX
-Highlight invalid words – Flash red border or shake animation when invalid.
-
-Stats tracking – Wins, losses, streaks saved in localStorage.
-
-Animations on tile flip – Makes guessing more satisfying.
-
-
-📱 UI/Design
-Responsive layout – The Wordle grid and login boxes could break on mobile. Use media queries or flexbox/grid.
-
-Sticky header with user menu – Add a top nav that shows current user, logout, maybe a theme toggle
-
-Game end message – “You won!” / “The word was X” modal.
-
-Restart confirmation – Avoid accidental restarts with a “Are you sure?” prompt.
-
+skaffa win/lose animations
+sounds effects

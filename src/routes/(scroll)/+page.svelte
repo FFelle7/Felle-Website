@@ -959,8 +959,8 @@ function handleScroll() {
 	border-radius: 4px;
 	text-transform: uppercase;
 	background:
-  	linear-gradient(336deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%),
-  	linear-gradient(24deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%),
+  	linear-gradient(336deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 16, 123, 0.262) 100%),
+  	linear-gradient(24deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 16, 123, 0.262) 100%),
   	linear-gradient(156deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%),
   	linear-gradient(204deg, rgba(0, 0, 0, 0.062) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 0.262) 100%);
   	background-color: #00000046;
@@ -1156,10 +1156,10 @@ button {
   background-image: linear-gradient(#212121, #212121),
     linear-gradient(
       137.48deg,
-      #ffdb3b 10%,
-      #fe53bb 45%,
-      #8f51ea 67%,
-      #0044ff 87%
+      #1d6bb3 10%,
+      #ae2678 45%,
+      #3e1a75 67%,
+      #001f72 87%
     );
   background-origin: border-box;
   background-clip: content-box, border-box;
@@ -1412,9 +1412,7 @@ strong {
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
-
-</style>
-
-skaffa lose animations, bokstäverna sugs ut i rymden och får ett litet blink som i gamla filmer.
-
+/*
 Kort demo på hur spelet funkar
+*/
+</style>

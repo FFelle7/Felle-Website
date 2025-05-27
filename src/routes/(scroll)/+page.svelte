@@ -474,14 +474,14 @@ function handleScroll() {
 <section id="landing" class="hero fade-in-section">
 	<div class="overlay nebula-glow"></div>
 	<div class="content">
-		<h1 class="title-effect">Bertils Wordle – Spela och vinn!</h1>
+		<button class="title-effect button" data-text="Awesome"><span class="actual-text">&nbsp;Bertils Wordle&nbsp;</span><span aria-hidden="true" class="hover-text">&nbsp;Bertils Wordle&nbsp;</span></button>
 		<p class="shimmer typing-description">{descriptionDisplay}</p>
 		<button class="cta-btn" data-target="#login" on:click={scrollIntoView}>
 			Learn More
 		</button>		
 	</div>
 </section>
-
+<!--Bertils Wordle – Spela och vinn!-->
 <!-- LOGIN SECTION -->
 <section id="login" class="login-section fade-in-section">
 	<canvas id="particleCanvas"></canvas>
@@ -493,7 +493,7 @@ function handleScroll() {
 	  <div class="form-wrapper">
 		<div class="form-container animate__animated {animationClass}">
 			{#if isLogin}
-			<form class="login-form" on:submit|preventDefault={handleLogin}>
+			<form class="login-form Glassmorphism " on:submit|preventDefault={handleLogin}>
 				<h2>Sign in to Bertils</h2>
 				<input type="text" placeholder="Username" minlength="3" maxlength="16" required bind:value={loginUsername} />
 				<input type="password" placeholder="Password" required bind:value={loginPassword} />
@@ -570,7 +570,16 @@ function handleScroll() {
 				on:keydown={(e) => e.key === 'Enter' && submitGuess()}
 				placeholder="Enter 5-letter word"
 			/>
-			<button on:click={submitGuess}>Submit</button>
+			<button class="btn" on:click={submitGuess}>
+				<div id="container-stars">
+					<div id="stars"></div>
+				</div>
+				<div id="glow">
+					<div class="circle"></div>
+					<div class="circle"></div>
+				</div>
+				<strong>SUBMIT</strong>
+			</button>
 		{:else}
 			<p class="game-over">
   {guesses[currentRow - 1]?.map(g => g.letter).join('').toUpperCase() === targetWord.toUpperCase()
@@ -672,7 +681,8 @@ function handleScroll() {
 		background: #000000;
 		background:
   			linear-gradient(336deg, rgba(0, 0, 0, 0) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 1) 100%),
-  			linear-gradient(24deg, rgba(0, 0, 0, 0) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 1) 100%);
+  			linear-gradient(24deg, rgba(0, 0, 0, 0) 0%, rgba(80, 183, 123, 0) 0%, rgba(87, 199, 133, 0) 64%, rgba(0, 0, 0, 1) 100%),
+			linear-gradient(to bottom, #000000, #0000008d, #77777700, #b9b9b900, #ffffff00);
 	}
 
 	.content {
@@ -764,6 +774,7 @@ function handleScroll() {
     outline: none;
 	color: rgba(255, 255, 255, 0.772);
 	background-color: #0000001d;
+	padding: 10px 12px; /* Lite inre marginal på vänster/höger */
   }
 
   .login-form button {
@@ -905,7 +916,7 @@ function handleScroll() {
 		border-radius: 5px;
 	}
 
-	.wordle-section button {
+	.wordle-section .key {
 		padding: 10px;
 		background: #00000036;
 		color: white;
@@ -915,11 +926,6 @@ function handleScroll() {
 		margin-top: 15px;
 		font-weight: bold;
 		transition: 0.3s;
-	}
-
-	.wordle-section button:hover {
-		background: #d13800;
-		transform: scale(1.05);
 	}
 
 	.wordle-row {
@@ -1132,6 +1138,280 @@ button {
     transform: translateX(-50%) scale(2);
   }
 }
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13rem;
+  overflow: hidden;
+  height: 3rem;
+  background-size: 300% 300%;
+  cursor: pointer;
+  backdrop-filter: blur(1rem);
+  border-radius: 5rem;
+  transition: 0.5s;
+  animation: gradient_301 5s ease infinite;
+  border: double 4px transparent;
+  background-image: linear-gradient(#212121, #212121),
+    linear-gradient(
+      137.48deg,
+      #ffdb3b 10%,
+      #fe53bb 45%,
+      #8f51ea 67%,
+      #0044ff 87%
+    );
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+#container-stars {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: 0.5s;
+  backdrop-filter: blur(1rem);
+  border-radius: 5rem;
+}
+
+strong {
+  z-index: 2;
+  font-family: "Avalors Personal Use";
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: #ffffff;
+  text-shadow: 0 0 4px white;
+}
+
+#glow {
+  position: absolute;
+  display: flex;
+  width: 12rem;
+}
+
+.circle {
+  width: 100%;
+  height: 30px;
+  filter: blur(2rem);
+  animation: pulse_3011 4s infinite;
+  z-index: -1;
+}
+
+.circle:nth-of-type(1) {
+  background: rgba(254, 83, 186, 0.636);
+}
+
+.circle:nth-of-type(2) {
+  background: rgba(142, 81, 234, 0.704);
+}
+
+.btn:hover #container-stars {
+  z-index: 1;
+  background-color: #212121;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+.btn:active {
+  border: double 4px #fe53bb;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: none;
+}
+
+.btn:active .circle {
+  background: #fe53bb;
+}
+
+#stars {
+  position: relative;
+  background: transparent;
+  width: 200rem;
+  height: 200rem;
+}
+
+#stars::after {
+  content: "";
+  position: absolute;
+  top: -10rem;
+  left: -100rem;
+  width: 100%;
+  height: 100%;
+  animation: animStarRotate 90s linear infinite;
+}
+
+#stars::after {
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50px;
+}
+
+#stars::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 170%;
+  height: 500%;
+  animation: animStar 60s linear infinite;
+}
+
+#stars::before {
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50px;
+  opacity: 0.5;
+}
+
+@keyframes animStar {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-135rem);
+  }
+}
+
+@keyframes animStarRotate {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0);
+  }
+}
+
+@keyframes gradient_301 {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse_3011 {
+  0% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+/* Remove default button style — adapted for heading */
+.button {
+  margin: 0;
+  background: transparent;
+  padding: 0;
+  border: none;
+  cursor: default;
+}
+
+/* Styling */
+.button {
+  --border-right: 6px;
+  --text-stroke-color: rgba(255,255,255,0.6);
+  --animation-color: #37FF8B;
+  --fs-size: 3rem;
+  letter-spacing: 3px;
+  text-decoration: none;
+  font-size: var(--fs-size);
+  font-family: "Arial", sans-serif;
+  position: relative;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+}
+
+.hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  content: attr(data-text);
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 0.5s ease;
+  -webkit-text-stroke: 1px var(--animation-color);
+  white-space: nowrap;
+}
+
+.button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color));
+}
+
+.button {
+  margin: 0;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  border: none;
+  cursor: default;
+  
+  --border-right: 6px;
+  --text-stroke-color: rgba(255, 255, 255, 0.6);
+  --animation-color: #6c37ff;
+  --fs-size: 2em;
+  letter-spacing: 3px;
+  text-decoration: none;
+  font-size: var(--fs-size);
+  font-family: "Arial", sans-serif;
+  position: relative;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+}
+
+.actual-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  content: attr(data-text);
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 0.5s;
+  -webkit-text-stroke: 1px var(--animation-color);
+}
+
+.button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color));
+}
+
+.Glassmorphism {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
 
 </style>
 

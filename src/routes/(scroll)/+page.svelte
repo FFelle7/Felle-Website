@@ -747,7 +747,7 @@ function handleScroll() {
 	/* LOGIN SECTION BACKGROUND */
 	.login-section {
 		/*background: content-box radial-gradient(rgba(32, 32, 87, 0.351), rgb(0, 0, 0));*/
-		background-image: url("{base}/images/background4.png");
+		background-image: url("/images/background4.png");
 	}
 
 	.login-form {
@@ -822,7 +822,7 @@ function handleScroll() {
 		justify-content: center;
 		text-align: center;
 		/*background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));*/
-		background-image: url("{base}/images/background2.png");
+		background-image: url("/images/background2.png");
 		color: white;
 	}
 

@@ -1,6 +1,7 @@
 <script>
 	import '../../app.postcss';
 	import { onMount } from "svelte";
+	import { base } from '$app/paths'
   
 	let isDark = true;
 	let currentUser = null;

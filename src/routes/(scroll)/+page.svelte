@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import 'animate.css';
+	import { base } from '$app/paths'
 	import confetti from 'canvas-confetti';
 
 	let descriptionText = "Spela Wordle med stil – mörkt läge, animerade effekter och en unik spelupplevelse.";
@@ -565,7 +566,7 @@ function handleScroll() {
 		overflow: hidden;
 		padding-top: 50px;
 		/*background: radial-gradient(circle, #202057, #04040d);*/
-		background-image: url("src/stores/images/background1.png");
+		background-image: url("{base}/src/stores/images/background1.png");
 	}
 
 	@keyframes flip {
@@ -746,7 +747,7 @@ function handleScroll() {
 	/* LOGIN SECTION BACKGROUND */
 	.login-section {
 		/*background: content-box radial-gradient(rgba(32, 32, 87, 0.351), rgb(0, 0, 0));*/
-		background-image: url("src/stores/images/background4.png");
+		background-image: url("{base}/src/stores/images/background4.png");
 	}
 
 	.login-form {
@@ -821,7 +822,7 @@ function handleScroll() {
 		justify-content: center;
 		text-align: center;
 		/*background: content-box radial-gradient(rgba(32, 32, 87, .5), rgb(0, 0, 0));*/
-		background-image: url("src/stores/images/background2.png");
+		background-image: url("{base}/src/stores/images/background2.png");
 		color: white;
 	}
 
@@ -1003,5 +1004,14 @@ button {
 }
 </style>
 
-skaffa win/lose animations
+skaffa lose animations, bokstäverna sugs ut i rymden och får ett litet blink som i gamla filmer.
 sounds effects
+
+rörande planets och blinkade stjärnor.
+Better atmosphere
+"Looping animation of a galaxy-themed background with slowly rotating planets, twinkling stars, and a layered parallax effect. Deep space colors (blues, purples, black), subtle nebula glow, and occasional shooting stars. Smooth transitions, cinematic mood, clean aesthetic. Matches sleek UI design with neon accents."
+
+Profil menu
+Icon istället för nanm, se namn efter man öppnar profilen.
+"Minimalist user profile dropdown menu with a round avatar icon only. When clicked, reveal the full name and options like logout or settings in a floating menu. Sleek, dark theme UI with soft shadows and glowing hover effects. Should match a futuristic/neon space aesthetic."
+Wordle Stats

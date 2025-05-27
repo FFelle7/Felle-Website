@@ -15,5 +15,7 @@ The following changes and implementations have been made in this version of the 
 * Ogiltigt ord animationer
 * Skriv ord animationer
 * Jävligt många bugfixar (finna jävligt många fler dock)
+* Animationer till inloggningen då man skrollar
+* En fadein för varje sektion
 
 <hr> <br>

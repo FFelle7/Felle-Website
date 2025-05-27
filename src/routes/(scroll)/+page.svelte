@@ -566,7 +566,7 @@ function handleScroll() {
 		overflow: hidden;
 		padding-top: 50px;
 		/*background: radial-gradient(circle, #202057, #04040d);*/
-		background-image: url("{base}/images/background1.png");
+		background-image: url("/images/background1.png");
 	}
 
 	@keyframes flip {

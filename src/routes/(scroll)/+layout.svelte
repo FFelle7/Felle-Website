@@ -13,6 +13,13 @@
 		localStorage.setItem('theme', isDark ? 'dark' : 'light');
 	}
 
+	let stats = {
+		gamesPlayed: 0,
+		wins: 0,
+		maxStreak: 0
+	};
+
+
 	function toggleMenu() {
 		showMenu = !showMenu;
 	}
@@ -34,6 +41,14 @@
 	} else {
 		currentUser = null;
 	}
+	const savedStats = localStorage.getItem('wordleStats');
+  if (savedStats) {
+    try {
+      stats = JSON.parse(savedStats);
+    } catch(e) {
+      console.error('Failed to parse stats from localStorage', e);
+    }
+  }
 });
 
 
@@ -57,6 +72,7 @@
 	</ul>
 	
 	<!-- Dark Mode / Light Mode Toggle -->
+	<div class="right-controls">
 	<button class="theme-toggle" on:click={toggleTheme}>
 	  <span class="sr-only">Toggle Dark Mode</span>
 	  {#if isDark}
@@ -67,17 +83,30 @@
 	</button>
 	{#if currentUser}
   <div class="user-menu">
-	<button on:click={toggleMenu}>
-	  {currentUser.username} ⌄
-	</button>
+    <div class="avatar-wrapper" on:click={toggleMenu}>
+      <img src="https://api.dicebear.com/7.x/identicon/svg?seed={currentUser.username}" alt="Avatar" class="avatar" />
+    </div>
 	{#if showMenu}
-	  <div class="dropdown">
-		<button on:click={logout}>Logout</button>
-	  </div>
-	{/if}
-  </div>
+  <div class="dropdown">
+	<div class="dropdown-header">{currentUser.username}</div>
+    <div class="stats-section">
+      <h3>Stats</h3>
+{#if stats}
+  <p>Games Played: {stats.gamesPlayed}</p>
+  <p>Win %: {stats.gamesPlayed > 0 ? Math.round((stats.wins / stats.gamesPlayed) * 100) : 0}%</p>
+  <p>Longest Streak: {stats.maxStreak}</p>
+{:else}
+  <p>Loading stats...</p>
 {/if}
 
+    </div>
+    <hr />
+    <button on:click={logout}>Logout</button>
+  </div>
+{/if}
+  </div>
+{/if}
+</div>
   </nav>
   
   <main class="bg-gradient text-white font-inter">
@@ -110,6 +139,12 @@
   position: relative;
 }
 
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* lagom avstånd mellan toggle och user-menu */
+}
+
 .user-menu button {
   background: none;
   border: none;
@@ -119,24 +154,87 @@
   padding: 8px;
 }
 
+.avatar-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #0ff;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.avatar-wrapper:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .dropdown {
   position: absolute;
   top: 100%;
   right: 0;
   background: #1f1f1f;
   border-radius: 6px;
-  padding: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  width: 220px;
+  color: white;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.stats-section h3 {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #7a5aff; /* neon-ish accent */
+  text-shadow: 0 0 6px #7a5aff;
+}
+
+.stats-section p {
+  margin: 4px 0;
+  line-height: 1.3;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(122, 90, 255, 0.3);
+  margin: 12px 0;
 }
 
 .dropdown button {
   width: 100%;
   background: none;
   border: none;
-  color: white;
-  text-align: left;
-  padding: 6px 12px;
+  color: #ff6c6c;
+  font-weight: 600;
+  padding: 8px 0;
   cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.dropdown button:hover {
+  background-color: rgba(255, 108, 108, 0.2);
+}
+
+
+.dropdown-header {
+  padding: 8px 16px;
+  color: #0ff;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .dropdown button:hover {

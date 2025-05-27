@@ -4,6 +4,13 @@
 	import { base } from '$app/paths'
 	import confetti from 'canvas-confetti';
 
+	let stats = {
+		gamesPlayed: 0,
+		wins: 0,
+		currentStreak: 0,
+		maxStreak: 0,
+	};
+
 	let descriptionText = "Spela Wordle med stil – mörkt läge, animerade effekter och en unik spelupplevelse.";
 	let descriptionDisplay = "";
 	let j = 0;
@@ -17,6 +24,25 @@
 	let registerPassword = '';
 	let registerConfirmPassword = '';
 
+	let showLoseEmoji = false;
+  let emoji = '🙁'; // start glad
+
+  // Anropa denna när spel är förlorat:
+  function playLoseAnimation() {
+    showLoseEmoji = true;
+    emoji = '🙁';
+
+    // Byt emoji efter 1.5s
+    setTimeout(() => {
+      emoji = '😢';
+    }, 1500);
+
+    // Dölj efter typ 3s
+    setTimeout(() => {
+      showLoseEmoji = false;
+    }, 3000);
+  }
+
 	// Confetti launcher
   function launchConfetti() {
     confetti({
@@ -26,6 +52,23 @@
       scalar: 1.2,
     });
   }
+
+  function updateStats(win) {
+  stats.gamesPlayed++;
+
+  if (win) {
+    stats.wins++;
+    stats.currentStreak++;
+    if (stats.currentStreak > stats.maxStreak) {
+      stats.maxStreak = stats.currentStreak;
+    }
+  } else {
+    stats.currentStreak = 0;
+  }
+
+  localStorage.setItem('wordleStats', JSON.stringify(stats));
+}
+
 
   // Flag to prevent multiple triggers
   let confettiLaunched = false;
@@ -40,6 +83,14 @@
     confettiLaunched = true;
   }
 
+  $: if (
+  gameOver &&
+  !confettiLaunched &&
+  guesses[currentRow - 1]?.map(g => g.letter).join('').toUpperCase() !== targetWord.toUpperCase()
+) {
+  playLoseAnimation();  // Din lose-animationfunktion
+  confettiLaunched = true; // Eller skapa en separat flagga som t.ex. `animationLaunched`
+}
 	
 	function typeDescription() {
 	  if (j < descriptionText.length) {
@@ -152,6 +203,11 @@
   
 	  initParticles();
 	  animateParticles();
+
+	  const savedStats = localStorage.getItem('wordleStats');
+		if (savedStats) {
+			stats = JSON.parse(savedStats);
+		}
 
 	  handleScroll(); // initiera rätt position
     window.addEventListener('scroll', handleScroll);
@@ -416,7 +472,7 @@ function handleScroll() {
 
 <!-- HERO SECTION -->
 <section id="landing" class="hero fade-in-section">
-	<div class="overlay"></div>
+	<div class="overlay nebula-glow"></div>
 	<div class="content">
 		<h1 class="title-effect">Bertils Wordle – Spela och vinn!</h1>
 		<p class="shimmer typing-description">{descriptionDisplay}</p>
@@ -539,7 +595,9 @@ function handleScroll() {
 		  </div>
 		{/each}
 	  </div>
-	  
+	{#if showLoseEmoji}
+	<div class="lose-emoji show">{emoji}</div>
+	{/if}
 </section>
 
 <style>
@@ -549,6 +607,8 @@ function handleScroll() {
 		padding: 0;
 		box-sizing: border-box;
 		scroll-behavior: smooth;
+		text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+
 	}
 	#particleCanvas {
 		position: absolute;
@@ -1002,16 +1062,79 @@ button {
   opacity: 1;
   transform: none;
 }
+
+:root {
+  --transition-speed: 0.4s;
+}
+
+* {
+  transition: all var(--transition-speed) ease;
+}
+.cta-btn {
+  position: relative;
+  background: linear-gradient(135deg, #000f5aa3, #4f006b8b);
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 0 transparent;
+  overflow: hidden;
+}
+
+.cta-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-20deg);
+  transition: left 0.4s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(123, 0, 255, 0.2);
+}
+
+.cta-btn:hover::after {
+  left: 150%;
+}
+
+.lose-emoji {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%) scale(1.5);
+  font-size: 8rem;
+  z-index: 999;
+  animation: flyUpFade 1s ease-out forwards;
+}
+
+@keyframes flyUpFade {
+  0% {
+    bottom: -100px;
+    opacity: 0;
+    transform: translateX(-50%) scale(4);
+  }
+  60% {
+    bottom: 50%;
+    opacity: 1;
+    transform: translateX(-50%) scale(2.4);
+  }
+  100% {
+    bottom: 45%;
+    transform: translateX(-50%) scale(2);
+  }
+}
+
 </style>
 
 skaffa lose animations, bokstäverna sugs ut i rymden och får ett litet blink som i gamla filmer.
-sounds effects
 
-rörande planets och blinkade stjärnor.
-Better atmosphere
-"Looping animation of a galaxy-themed background with slowly rotating planets, twinkling stars, and a layered parallax effect. Deep space colors (blues, purples, black), subtle nebula glow, and occasional shooting stars. Smooth transitions, cinematic mood, clean aesthetic. Matches sleek UI design with neon accents."
-
-Profil menu
-Icon istället för nanm, se namn efter man öppnar profilen.
-"Minimalist user profile dropdown menu with a round avatar icon only. When clicked, reveal the full name and options like logout or settings in a floating menu. Sleek, dark theme UI with soft shadows and glowing hover effects. Should match a futuristic/neon space aesthetic."
-Wordle Stats
+Kort demo på hur spelet funkar

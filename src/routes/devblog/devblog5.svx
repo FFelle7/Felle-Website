@@ -1,0 +1,22 @@
+---
+title: Version 0.3.x
+date: "2025-05-26"
+---
+# Devblog 3
+## Description
+Jävligt mycket smådetaljer för att det ska bli trevligare att kolla runt
+
+## Changes
+The following changes and implementations have been made in this version of the project:
+
+* lose animationer
+* Lite mer animationer
+* Snyggare knappar
+* Mer fade in då man skrollar
+* Snyggare skrolling
+* Ny hover på titeln
+* Profile Page
+* Bugfixar
+* Snyggare transitions mellan bilderna.
+
+<hr> <br>

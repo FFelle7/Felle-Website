@@ -25,9 +25,8 @@
 	let registerConfirmPassword = '';
 
 	let showLoseEmoji = false;
-  let emoji = '🙁'; // start glad
+  let emoji = '🙁';
 
-  // Anropa denna när spel är förlorat:
   function playLoseAnimation() {
     showLoseEmoji = true;
     emoji = '🙁';
@@ -73,7 +72,6 @@
   // Flag to prevent multiple triggers
   let confettiLaunched = false;
 
-  // Reactive watch for winning condition + gameOver flag
   $: if (
     gameOver &&
     !confettiLaunched &&
@@ -88,8 +86,8 @@
   !confettiLaunched &&
   guesses[currentRow - 1]?.map(g => g.letter).join('').toUpperCase() !== targetWord.toUpperCase()
 ) {
-  playLoseAnimation();  // Din lose-animationfunktion
-  confettiLaunched = true; // Eller skapa en separat flagga som t.ex. `animationLaunched`
+  playLoseAnimation();
+  confettiLaunched = true;
 }
 	
 	function typeDescription() {
@@ -209,7 +207,7 @@
 			stats = JSON.parse(savedStats);
 		}
 
-	  handleScroll(); // initiera rätt position
+	  handleScroll();
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
     
@@ -222,7 +220,7 @@
 
 function handleLogin() {
   const storedUser = localStorage.getItem('user');
-  		location.reload(); // clean reset
+  		location.reload();
 
 
   if (!storedUser) {
@@ -297,7 +295,7 @@ let isInvalid = false;
 	//Wordle
 let targetWord = '';
 let currentGuess = '';
-let guesses = Array(6).fill(null); // six rows, initially empty
+let guesses = Array(6).fill(null); // six rows
 let currentRow = 0;
 let gameOver = false;
 
@@ -774,7 +772,7 @@ function handleScroll() {
     outline: none;
 	color: rgba(255, 255, 255, 0.772);
 	background-color: #0000001d;
-	padding: 10px 12px; /* Lite inre marginal på vänster/höger */
+	padding: 10px 12px;
   }
 
   .login-form button {
@@ -1316,7 +1314,6 @@ strong {
   }
 }
 
-/* Remove default button style — adapted for heading */
 .button {
   margin: 0;
   background: transparent;
@@ -1413,6 +1410,7 @@ strong {
 }
 
 /*
+Förbättringar:
 Kort demo på hur spelet funkar
 */
 </style>

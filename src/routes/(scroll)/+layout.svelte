@@ -71,7 +71,6 @@
 	  <li><a href="#wordle" on:click|preventDefault={scrollIntoView}>Wordle</a></li>
 	</ul>
 	
-	<!-- Dark Mode / Light Mode Toggle -->
 	<div class="right-controls">
 	<button class="theme-toggle" on:click={toggleTheme}>
 	  <span class="sr-only">Toggle Dark Mode</span>
@@ -156,7 +155,7 @@
 .right-controls {
   display: flex;
   align-items: center;
-  gap: 16px; /* lagom avstånd mellan toggle och user-menu */
+  gap: 16px;
 }
 
 .user-menu button {
@@ -207,7 +206,7 @@
 .stats-section h3 {
   margin: 0 0 8px 0;
   font-weight: 600;
-  color: #7a5aff; /* neon-ish accent */
+  color: #7a5aff;
   text-shadow: 0 0 6px #7a5aff;
 }
 
@@ -256,14 +255,12 @@ hr {
 }
 
   
-	/* Logo Styling */
 	.navbar .logo {
 	  font-size: 1.5rem;
 	  font-weight: 600;
 	  color: #ffffff;
 	}
   
-	/* Navbar links */
 	.navbar ul {
 	  display: flex;
 	  gap: 25px;
@@ -285,7 +282,6 @@ hr {
 	  display: inline-block;
 	}
   
-	/* Hover effects: Scaling and underline animation */
 	.navbar ul li a::before {
 	  content: '';
 	  position: absolute;
@@ -300,14 +296,13 @@ hr {
 	.navbar ul li a:hover {
 	  transform: scale(1.1);
 	  color: #7a5aff;
-	  background-color: rgba(122, 90, 255, 0.1);  /* subtle background change */
+	  background-color: rgba(122, 90, 255, 0.1);
 	}
   
 	.navbar ul li a:hover::before {
 	  width: 100%;
 	}
   
-	/* Dark Mode Toggle Button */
 	.theme-toggle {
 	  background: transparent;
 	  border: none;
@@ -323,7 +318,6 @@ hr {
 	  background-color: rgba(255, 255, 255, 0.1);
 	}
   
-	/* Background Animation */
 	.bg-gradient {
 	  background: linear-gradient(-45deg, #1f2a44, #020617, black);
 	  animation: gradientShift 6s infinite alternate;
@@ -337,6 +331,7 @@ hr {
 		background: linear-gradient(-45deg, #212b46, #010409, black);
 	  }
 	}
+	
 	/* Intro Animation for Navbar */
 	@keyframes navbarIntro {
 	  0% {
@@ -349,7 +344,6 @@ hr {
 	  }
 	}
 
-	/* From Uiverse.io by G4b413l */ 
 .card svg {
   height: 25px;
 }
